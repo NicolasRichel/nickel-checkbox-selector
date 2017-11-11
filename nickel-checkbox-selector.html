@@ -4,25 +4,26 @@
 
 <dom-module id="nickel-checkbox-selector">
   <template>
-		<custom-style>
-	    <style is="custom-style">
-	      :host {
-	        display: block;
-	      }
+    <custom-style>
+      <style is="custom-style">
+        :host {
+          display: block;
+        }
 
-	      .container {
-	        margin: auto;
-	        padding: 16px;
-	        border: 2px solid black;
-	        border-radius: 7px;
-	      }
+        paper-checkbox {
+          @apply --checkbox-mixin;
+        }
 
-	      .option {
-	        margin: 8px 4px;
-	        padding: 2px;
-	      }
-	    </style>
-		</custom-style>
+        .container {
+          @apply --container-mixin;
+        }
+
+        .option {
+          padding: 4px;
+          @apply --option-mixin;
+        }
+      </style>
+    </custom-style>
     <div class="container">
       <div id="label">[[label]] : </div>
       <div id="list">
@@ -41,10 +42,20 @@
     /**
      * # Nickel Checkbox Selector
      * A simple value selector build with paper-checkbox.
-		 *
-		 * ### General description
-		 * `<nickel-checkbox-selector>` allow to select a single value among a set
-		 * of options.
+     *
+     * ### General description
+     * `<nickel-checkbox-selector>` allow to select a single value among a set
+     * of options.
+     *
+     * ### Styling
+     * `<nickel-checkbox-selector>` provides the following custom properties and
+     * mixins for styling :
+     *
+     *  Custom Property    | Description                    | Default
+     * --------------------|------------------------------- |---------
+     * `--checkbox-mixin`  | mixin applied to the checkoxes | `{}`
+     * `--container-mixin` | mixin applied to the container | `{}`
+     * `--option-mixin`    | mixin applied to the options   | `{}`
      *
      * @customElement
      * @polymer
@@ -56,6 +67,13 @@
 
       static get properties() {
         return {
+          /** Indicates whether the options are displayed inline or not */
+          inline: {
+            type: Boolean,
+            value: false,
+            observer: '_setLayout'
+          },
+
           /** Selector label. */
           label: {
             type: String,
@@ -97,10 +115,11 @@
 
       constructor() {
         super();
-        this.addEventListener('dom-change', function() {
+        this.addEventListener('dom-change', () => {
           this._createMethodObserver('_setSelection(selectionArray.splices)', true);
+          this._setLayout(this.inline);
           this._setSelection(null);
-        }.bind(this));
+        });
       }
 
       /**
@@ -109,14 +128,24 @@
        * This function is called each time the options property is changed.
        *
        * @param {Array} opts The set of available options.
-       * @private
+       * @return {Array} The initial selectionArray
        */
       _getInitSelection(opts) {
-        let array = new Array();
-        for (let i=0 ; i<opts.length ; i++) {
-          array.push(i===this.selected);
-        }
-        return array;
+        return opts.map((x, i) => {
+          return i===this.selected;
+        });
+      }
+
+      /**
+       * Set the layout of the options by setting the CSS display property for
+       * all elements with class `option`.
+       *
+       * @param {Boolean} inline
+       */
+      _setLayout(inline) {
+        this.shadowRoot.querySelectorAll('.option').forEach((opt) => {
+          opt.style.display = inline ? 'inline-block' : 'block';
+        });
       }
 
       /**
@@ -128,20 +157,19 @@
        * the selectionArray values, this is useful to init the state of the selection.
        *
        * @param {Object} changes Changes applied to the selectionArray as splices record
-       * @private
        */
       _setSelection(changes) {
-        const x = this.selectionArray;
+        const array = this.selectionArray;
         if (changes) {
-          changes.indexSplices.forEach(function(s) {
-            this.shadowRoot.querySelector('#box'+s.index).checked = x[s.index];
-          }.bind(this));
+          changes.indexSplices.forEach((s) => {
+            this.shadowRoot.querySelector('#box'+s.index).checked = array[s.index];
+          });
         } else {
-          for (let i=0 ; i<x.length ; i++) {
-            this.shadowRoot.querySelector('#box'+i).checked = x[i];
-          }
+          array.forEach((x, i) => {
+            this.shadowRoot.querySelector('#box'+i).checked = x;
+          });
         }
-        const n = x.indexOf(true);
+        const n = array.indexOf(true);
         this.setProperties({
           selected: n,
           value: this.options[n]
@@ -153,23 +181,20 @@
        * This function is called each time the state of one of the checkboxes is changed.
        *
        * @param {Event} event Checked changed event
-       * @private
        */
       _setSelectionArray(event) {
-        const nOld = this.selectionArray.indexOf(true);
-        const nNew = parseInt(event.target.id.slice(3));
-        const n = nOld<nNew ? [nOld, nNew] : [nNew, nOld];
-        let splices = new Array();
-        for (let i=0 ; i<2 ; i++) {
-          splices.push({
-            index: n[i],
-            removed: this.selectionArray.splice(n[i], 1, n[i]===nNew),
+        const oldIndex = this.selectionArray.indexOf(true);
+        const newIndex = parseInt(event.target.id.slice(3));
+        const indexes = oldIndex<newIndex ? [oldIndex, newIndex] : [newIndex, oldIndex];
+        this.notifySplices('selectionArray', indexes.map((n) => {
+          return {
+            index: n,
+            removed: this.selectionArray.splice(n, 1, n===newIndex),
             addedCount: 1,
             object: this.selectionArray,
             type: 'splice'
-          });
-        }
-        this.notifySplices('selectionArray', splices);
+          };
+        }));
       }
     }
     window.customElements.define(NickelCheckboxSelector.is, NickelCheckboxSelector);

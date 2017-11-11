@@ -24,7 +24,28 @@
       <h3>Basic nickel-checkbox-selector demo</h3>
       <demo-snippet>
         <template>
-          <nickel-checkbox-selector options='["Jambon","Poulet","Boeuf"]'></nickel-checkbox-selector>
+          <nickel-checkbox-selector
+            id="selector"
+            options='["Jambon","Poulet","Boeuf"]'>
+          </nickel-checkbox-selector>
+          Selected value : <span id="val">Jambon</span>
+        </template>
+        <script>
+          document.getElementById('selector')
+          .addEventListener('value-changed', (e) => {
+            document.getElementById('val').textContent = e.target.value;
+          });
+        </script>
+      </demo-snippet>
+
+      <!-- Demo 2 -->
+      <demo-snippet>
+        <template>
+          <nickel-checkbox-selector
+            inline
+            show-num
+            options='["High","Medium","Low"]'>
+          </nickel-checkbox-selector>
         </template>
       </demo-snippet>
 
