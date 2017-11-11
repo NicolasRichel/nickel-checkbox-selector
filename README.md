@@ -1,7 +1,7 @@
 # \<nickel-checkbox-selector\>
 
 A simple value selector build with
-[\<paper-checkbox\>](https://www.webcomponents.org/element/PolymerElements/paper-checkbox).
+[\<paper-checkbox\>](https://github.com/PolymerElements/paper-checkbox).
 
 <!--
 ```
