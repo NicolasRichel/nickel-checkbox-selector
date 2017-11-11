@@ -15,5 +15,8 @@ A simple value selector build with
 ```
 -->
 ```html
-<nickel-checkbox-selector></nickel-checkbox-selector>
+<nickel-checkbox-selector
+  inline
+  options='["United Kingdom","Germany","Italy","France"]'>
+</nickel-checkbox-selector>
 ```
