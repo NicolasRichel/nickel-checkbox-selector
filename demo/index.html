@@ -23,12 +23,18 @@
       <!-- Demo 1 -->
       <h3>Basic nickel-checkbox-selector demo</h3>
       <demo-snippet>
+        <style>
+          p {
+            margin: 8px;
+          }
+        </style>
         <template>
           <nickel-checkbox-selector
             id="selector"
+            label="Que voulez vous manger ?"
             options='["Jambon","Poulet","Boeuf"]'>
           </nickel-checkbox-selector>
-          Selected value : <span id="val">Jambon</span>
+          <p>Selected value : <span id="val">Jambon</span></p>
         </template>
         <script>
           document.getElementById('selector')
@@ -39,6 +45,7 @@
       </demo-snippet>
 
       <!-- Demo 2 -->
+      <h3>Demo with 'inline' and 'show-num'</h3>
       <demo-snippet>
         <template>
           <nickel-checkbox-selector
