@@ -1,0 +1,177 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+
+<dom-module id="nickel-checkbox-selector">
+  <template>
+		<custom-style>
+	    <style is="custom-style">
+	      :host {
+	        display: block;
+	      }
+
+	      .container {
+	        margin: auto;
+	        padding: 16px;
+	        border: 2px solid black;
+	        border-radius: 7px;
+	      }
+
+	      .option {
+	        margin: 8px 4px;
+	        padding: 2px;
+	      }
+	    </style>
+		</custom-style>
+    <div class="container">
+      <div id="label">[[label]] : </div>
+      <div id="list">
+      <template is="dom-repeat" items="[[options]]">
+        <div class="option">
+          <paper-checkbox id="box[[index]]" on-change="_setSelectionArray">
+          <span hidden$="[[!showNum]]">[[index]] - </span>[[item]]
+          </paper-checkbox>
+        </div>
+      </template>
+      </div>
+    </div>
+  </template>
+  <script>
+    'use strict';
+    /**
+     * # Nickel Checkbox Selector
+     * A simple value selector build with paper-checkbox.
+		 *
+		 * ### General description
+		 * `<nickel-checkbox-selector>` allow to select a single value among a set
+		 * of options.
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class NickelCheckboxSelector extends Polymer.Element {
+
+      static get is() { return 'nickel-checkbox-selector'; }
+
+      static get properties() {
+        return {
+          /** Selector label. */
+          label: {
+            type: String,
+            value: 'Options'
+          },
+
+          /** Array of available options. */
+          options: Array,
+
+          /** Index of the selected option. */
+          selected: {
+            type: Number,
+            value: 0,
+            notify: true
+          },
+
+          /**
+           * Array of boolean value that indicates which options
+           * have been selected.
+           */
+          selectionArray: {
+            type: Array,
+            computed: '_getInitSelection(options)'
+          },
+
+          /** Indicates whether to show the options indexes or not. */
+          showNum: {
+            type: Boolean,
+            value: false
+          },
+
+          /** Value of the selected option. */
+          value: {
+            type: String,
+            notify: true
+          }
+        };
+      }
+
+      constructor() {
+        super();
+        this.addEventListener('dom-change', function() {
+          this._createMethodObserver('_setSelection(selectionArray.splices)', true);
+          this._setSelection(null);
+        }.bind(this));
+      }
+
+      /**
+       * Compute the initial value of the selectionArray property for the given
+       * set of options and according to the selected property value.
+       * This function is called each time the options property is changed.
+       *
+       * @param {Array} opts The set of available options.
+       * @private
+       */
+      _getInitSelection(opts) {
+        let array = new Array();
+        for (let i=0 ; i<opts.length ; i++) {
+          array.push(i===this.selected);
+        }
+        return array;
+      }
+
+      /**
+       * Sets the checked property of checkboxes according to the selectionArray values.
+       * Also set the selected and the value properties.
+       * This function is the observer of selectionArray.splices it is then intended to
+       * be called each time the selectionArray is changed.
+       * If called with a `null` parameter sets all the checkboxes states according to
+       * the selectionArray values, this is useful to init the state of the selection.
+       *
+       * @param {Object} changes Changes applied to the selectionArray as splices record
+       * @private
+       */
+      _setSelection(changes) {
+        const x = this.selectionArray;
+        if (changes) {
+          changes.indexSplices.forEach(function(s) {
+            this.shadowRoot.querySelector('#box'+s.index).checked = x[s.index];
+          }.bind(this));
+        } else {
+          for (let i=0 ; i<x.length ; i++) {
+            this.shadowRoot.querySelector('#box'+i).checked = x[i];
+          }
+        }
+        const n = x.indexOf(true);
+        this.setProperties({
+          selected: n,
+          value: this.options[n]
+        });
+      }
+
+      /**
+       * Changes the selectionArray values on user interaction.
+       * This function is called each time the state of one of the checkboxes is changed.
+       *
+       * @param {Event} event Checked changed event
+       * @private
+       */
+      _setSelectionArray(event) {
+        const nOld = this.selectionArray.indexOf(true);
+        const nNew = parseInt(event.target.id.slice(3));
+        const n = nOld<nNew ? [nOld, nNew] : [nNew, nOld];
+        let splices = new Array();
+        for (let i=0 ; i<2 ; i++) {
+          splices.push({
+            index: n[i],
+            removed: this.selectionArray.splice(n[i], 1, n[i]===nNew),
+            addedCount: 1,
+            object: this.selectionArray,
+            type: 'splice'
+          });
+        }
+        this.notifySplices('selectionArray', splices);
+      }
+    }
+    window.customElements.define(NickelCheckboxSelector.is, NickelCheckboxSelector);
+  </script>
+</dom-module>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+		
+		<title>nickel-checkbox-selector test</title>
+		
+		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+		<script src="../../web-component-tester/browser.js"></script>
+		
+		<link rel="import" href="../nickel-checkbox-selector.html">
+	</head>
+	<body>
+	
+		<test-fixture id="BasicTestFixture">
+			<template>
+				<nickel-checkbox-selector></nickel-checkbox-selector>
+			</template>
+		</test-fixture>
+		
+		<script>
+			suite('nickel-checkbox-selector', function() {
+			
+				test('instantiating the element with default properties works', function() {
+					var element = fixture('BasicTestFixture');
+				});
+			
+			});
+		</script>
+	
+	</body>
+</html>
