@@ -130,12 +130,12 @@
       }
 
       /**
-       * Compute the initial value of the selectionArray property for the given
-       * set of options and according to the selected property value.
-       * This function is called each time the options property is changed.
+       * Compute the initial value of the `selectionArray` property for the given
+       * set of `options` and according to the `selected` property value.
+       * This function is called each time the `options` property is changed.
        *
        * @param {Array} opts The set of available options.
-       * @return {Array} The initial selectionArray
+       * @return {Array} The initial `selectionArray`
        */
       _getInitSelection(opts) {
         return opts.map((x, i) => {
@@ -144,7 +144,7 @@
       }
 
       /**
-       * Set the layout of the options by setting the CSS display property for
+       * Set the layout of the options by setting the CSS `display` property for
        * all elements with class `option`.
        *
        * @param {Boolean} inline
@@ -156,14 +156,14 @@
       }
 
       /**
-       * Sets the checked property of checkboxes according to the selectionArray values.
-       * Also set the selected and the value properties.
-       * This function is the observer of selectionArray.splices it is then intended to
-       * be called each time the selectionArray is changed.
-       * If called with a `null` parameter sets all the checkboxes states according to
-       * the selectionArray values, this is useful to init the state of the selection.
+       * Sets the checked property of checkboxes according to the `selectionArray` changes.
+       * Also set the `selected` and the `value` properties.
+       * This function is the observer of `selectionArray.splices` it is then intended to
+       * be called each time the `selectionArray` is changed.
+       * If called with a `null` parameter it sets all the checkboxes states according to
+       * the `selectionArray` values, this is useful to init the state of the selection.
        *
-       * @param {Object} changes Changes applied to the selectionArray as splices record
+       * @param {Object} changes Changes applied to the `selectionArray` as splices record
        */
       _setSelection(changes) {
         const array = this.selectionArray;
@@ -184,7 +184,7 @@
       }
 
       /**
-       * Changes the selectionArray values on user interaction.
+       * Changes the `selectionArray` values on user interaction.
        * This function is called each time the state of one of the checkboxes is changed.
        *
        * @param {Event} event Checked changed event
