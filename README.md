@@ -1,3 +1,5 @@
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg?style=flat-square)](https://www.webcomponents.org/element/NicolasRichel/nickel-checkbox-selector)
+
 # \<nickel-checkbox-selector\>
 (built with Polymer 2.0)
 
