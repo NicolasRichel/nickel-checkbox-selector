@@ -25,12 +25,12 @@
       </style>
     </custom-style>
     <div class="container">
-      <div id="label">[[label]] : </div>
+      <div id="label">[[label]] :</div>
       <div id="list">
       <template is="dom-repeat" items="[[options]]">
         <div class="option">
           <paper-checkbox id="box[[index]]" on-change="_setSelectionArray">
-          <span hidden$="[[!showNum]]">[[index]] - </span>[[item]]
+            <span hidden$="[[!showNum]]">[[index]] - </span>[[item]]
           </paper-checkbox>
         </div>
       </template>
@@ -191,7 +191,7 @@
        */
       _setSelectionArray(event) {
         const oldIndex = this.selectionArray.indexOf(true);
-        const newIndex = parseInt(event.target.id.slice(3));
+        const newIndex = parseInt(event.model.index);
         const indexes = oldIndex<newIndex ? [oldIndex, newIndex] : [newIndex, oldIndex];
         this.notifySplices('selectionArray', indexes.map((n) => {
           return {
