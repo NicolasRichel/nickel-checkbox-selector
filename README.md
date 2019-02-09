@@ -1,3 +1,6 @@
+# Version Polymer 2.0 (DEPRECATED)
+
+
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg?style=flat-square)](https://www.webcomponents.org/element/NicolasRichel/nickel-checkbox-selector)
 
 # \<nickel-checkbox-selector\>
@@ -35,3 +38,4 @@ A simple value selector build with
 ## License
 
 GNU General Public License version 3.0.
+
